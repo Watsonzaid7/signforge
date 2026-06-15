@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SignForge — Handwritten Signature Generator</title>
+<style>
+:root{--bg:#f5f3ef;--surf:#fff;--s2:#eceae5;--brd:#e0ddd6;--txt:#18170f;--mut:#72706a;--acc:#1c3d8f;--ach:#132e6e;--al:#e6ebf7;--sh:0 4px 20px rgba(0,0,0,.09);}
+[data-theme=dark]{--bg:#0e0e0d;--surf:#1a1918;--s2:#222120;--brd:#2e2d2a;--txt:#f0ede7;--mut:#78766f;--acc:#4f72d4;--ach:#6682e0;--al:#1a2340;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;transition:background .25s,color .25s;}
+header{position:sticky;top:0;z-index:100;height:56px;background:var(--surf);border-bottom:1px solid var(--brd);box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.hi{max-width:1320px;margin:0 auto;padding:0 22px;height:100%;display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:9px;}
+.bico{width:32px;height:32px;color:var(--acc);}
+.bnm{font-size:1.15rem;font-weight:800;background:linear-gradient(135deg,var(--acc),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ib{width:34px;height:34px;border-radius:50%;border:1px solid var(--brd);background:var(--s2);color:var(--mut);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.ib:hover{background:var(--brd);color:var(--txt);}
+.ib svg{width:16px;height:16px;}
+[data-theme=light] .moon{display:block;}[data-theme=light] .sun{display:none;}
+[data-theme=dark] .sun{display:block;}[data-theme=dark] .moon{display:none;}
+main{max-width:1320px;margin:0 auto;padding:34px 22px 80px;}
+.hero{text-align:center;margin-bottom:30px;}
+h1{font-size:clamp(1.6rem,3.2vw,2.5rem);font-weight:800;letter-spacing:-.03em;margin-bottom:5px;}
+h1 em{font-style:italic;background:linear-gradient(135deg,var(--acc),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sub{font-size:.9rem;color:var(--mut);margin-bottom:22px;}
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:14px;box-shadow:var(--sh);padding:18px 22px;max-width:920px;margin:0 auto;}
+.row{display:flex;gap:9px;align-items:stretch;}
+.ig{flex:1;}
+#ni{width:100%;height:46px;padding:0 15px;font-size:1rem;font-family:inherit;color:var(--txt);background:var(--s2);border:1.5px solid var(--brd);border-radius:9px;outline:none;transition:border-color .15s,box-shadow .15s;}
+#ni:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--al);}
+#ni::placeholder{color:var(--mut);}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:0 18px;height:46px;font-size:.86rem;font-weight:600;font-family:inherit;border-radius:9px;border:1.5px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.btn svg{width:14px;height:14px;}
+.bp{background:var(--acc);color:#fff;}
+.bp:hover{background:var(--ach);transform:translateY(-1px);}
+.bs{background:var(--s2);color:var(--txt);border-color:var(--brd);}
+.bs:hover{background:var(--brd);}
+.bg2{background:transparent;color:var(--mut);}
+.bg2:hover{color:#c0392b;background:rgba(192,57,43,.07);}
+.cbar{display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin-top:14px;padding-top:14px;border-top:1px solid var(--brd);}
+.cg{display:flex;align-items:center;gap:7px;}
+.cg label{font-size:.77rem;font-weight:500;color:var(--mut);white-space:nowrap;}
+.sws{display:flex;align-items:center;gap:4px;}
+.sw{width:20px;height:20px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all .15s;padding:0;}
+.sw:hover{transform:scale(1.18);}
+.sw.on{border-color:var(--txt);box-shadow:0 0 0 2px var(--bg);}
+#cp{width:24px;height:24px;border-radius:50%;border:2px solid var(--brd);cursor:pointer;background:none;padding:0;}
+#ss{width:86px;accent-color:var(--acc);}
+#ff,#si{height:32px;padding:0 9px;font-size:.8rem;font-family:inherit;color:var(--txt);background:var(--s2);border:1px solid var(--brd);border-radius:6px;outline:none;}
+#ff{min-width:160px;}#si{width:155px;}
+.stb{display:flex;align-items:center;gap:7px;font-size:.82rem;color:var(--mut);max-width:920px;margin:0 auto 20px;padding:0 2px;}
+.dot{opacity:.35;}
+.lb{background:none;border:none;color:var(--acc);font-size:.82rem;cursor:pointer;padding:1px 3px;border-radius:3px;}
+.lb:hover{background:var(--al);}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:13px;}
+.sc{background:var(--surf);border:1.5px solid var(--brd);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:transform .2s,box-shadow .2s;animation:fu .26s ease both;}
+.sc:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.11);}
+.sc.fav{border-color:#f59e0b;}
+.cw{background:#fff;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:center;min-height:120px;padding:8px;}
+[data-theme=dark] .cw{background:#f8f7f4;}
+.cw canvas{max-width:100%;height:auto;display:block;}
+.cf{padding:8px 11px;display:flex;align-items:center;justify-content:space-between;gap:5px;}
+.sm{flex:1;min-width:0;}
+.sl{font-size:.71rem;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sf{font-size:.64rem;color:var(--mut);margin-top:1px;}
+.ca{display:flex;align-items:center;gap:3px;}
+.ab{display:inline-flex;align-items:center;justify-content:center;width:29px;height:29px;border-radius:5px;border:1px solid var(--brd);background:var(--s2);color:var(--mut);font-size:.68rem;font-weight:500;cursor:pointer;transition:all .15s;padding:0;}
+.ab:hover{background:var(--al);color:var(--acc);border-color:var(--acc);}
+.ab.fon{color:#f59e0b;border-color:#f59e0b;background:#fef9ee;}
+.empty{grid-column:1/-1;text-align:center;padding:70px 20px;color:var(--mut);}
+.empty svg{width:88px;height:66px;margin-bottom:14px;opacity:.4;}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.38);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;z-index:9999;color:#fff;font-size:.93rem;backdrop-filter:blur(3px);}
+.sp{width:40px;height:40px;border:3px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(65px);background:var(--txt);color:var(--bg);padding:8px 18px;border-radius:100px;font-size:.83rem;font-weight:500;box-shadow:var(--sh);pointer-events:none;z-index:9998;transition:transform .28s,opacity .28s;opacity:0;white-space:nowrap;}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1;}
+.hidden{display:none!important;}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── TABS */
+.tabs{display:flex;gap:0;max-width:920px;margin:0 auto 0;border-radius:14px 14px 0 0;overflow:hidden;border:1px solid var(--brd);border-bottom:none;background:var(--s2);}
+.tab{flex:1;padding:12px 20px;font-size:.88rem;font-weight:600;font-family:inherit;cursor:pointer;border:none;background:transparent;color:var(--mut);transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.tab.active{background:var(--surf);color:var(--acc);box-shadow:none;}
+.tab:hover:not(.active){background:var(--brd);color:var(--txt);}
+.tab-icon{font-size:1rem;}
+.tab-panel{display:none;background:var(--surf);border:1px solid var(--brd);border-radius:0 0 14px 14px;box-shadow:var(--sh);max-width:920px;margin:0 auto 30px;}
+.tab-panel.active{display:block;}
+/* ── DRAW PAD */
+.draw-wrap{padding:18px 22px;}
+.draw-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:14px;}
+.draw-toolbar label{font-size:.77rem;font-weight:500;color:var(--mut);}
+.pen-sizes{display:flex;gap:5px;align-items:center;}
+.pen-sz{width:30px;height:30px;border-radius:6px;border:1.5px solid var(--brd);background:var(--s2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:0;}
+.pen-sz:hover,.pen-sz.on{border-color:var(--acc);background:var(--al);}
+.pen-sz span{border-radius:50%;background:var(--txt);display:block;}
+.draw-sws{display:flex;gap:4px;align-items:center;}
+.draw-sw{width:20px;height:20px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all .15s;padding:0;}
+.draw-sw.on{border-color:var(--txt);box-shadow:0 0 0 2px var(--bg);}
+#dcp{width:24px;height:24px;border-radius:50%;border:2px solid var(--brd);cursor:pointer;background:none;padding:0;}
+.canvas-container{position:relative;border-radius:10px;overflow:hidden;border:1.5px solid var(--brd);background:#fff;cursor:crosshair;touch-action:none;}
+[data-theme=dark] .canvas-container{background:#f8f7f4;}
+#drawCanvas{display:block;width:100%;height:200px;}
+.draw-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ccc;font-size:.95rem;pointer-events:none;text-align:center;transition:opacity .2s;user-select:none;}
+.draw-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--brd);}
+.draw-dl-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.saved-draws{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:16px;}
+.saved-draw-card{background:var(--s2);border:1.5px solid var(--brd);border-radius:10px;overflow:hidden;transition:all .18s;}
+.saved-draw-card:hover{border-color:var(--acc);transform:translateY(-2px);}
+.saved-draw-card img{width:100%;height:80px;object-fit:contain;background:#fff;display:block;padding:4px;}
+.saved-draw-footer{padding:6px 8px;display:flex;align-items:center;justify-content:space-between;}
+.saved-draw-label{font-size:.68rem;color:var(--mut);}
+.saved-draw-actions{display:flex;gap:3px;}
+.smoothness-wrap{display:flex;align-items:center;gap:7px;}
+#smoothSlider{width:70px;accent-color:var(--acc);}
+
+@keyframes fu{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@media(max-width:580px){main{padding:18px 12px 60px;}.row{flex-direction:column;}.bp{width:100%;justify-content:center;}.cbar{flex-direction:column;align-items:flex-start;}.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hi">
+    <div class="brand">
+      <svg class="bico" viewBox="0 0 40 40" fill="none">
+        <path d="M4 30 Q10 8 20 18 Q30 28 36 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <path d="M14 34 Q25 34 36 34" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" opacity=".5"/>
+      </svg>
+      <span class="bnm">SignForge</span>
+    </div>
+    <button id="tb" class="ib" title="Toggle theme">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</header>
+<main>
+  <section class="hero">
+    <h1>Turn your name into a <em>signature</em></h1>
+    <p class="sub">Generate from text · Or draw your own · Download instantly</p>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" id="tabGen" onclick="switchTab('gen')">
+        <span class="tab-icon">✨</span> Generate from Text
+      </button>
+      <button class="tab" id="tabDraw" onclick="switchTab('draw')">
+        <span class="tab-icon">✏️</span> Draw Your Signature
+      </button>
+    </div>
+
+    <!-- TAB: GENERATE -->
+    <div class="tab-panel active" id="panelGen">
+      <div style="padding:18px 22px;">
+        <div class="row">
+          <div class="ig"><label for="ni" class="sr">Name</label>
+            <input id="ni" type="text" placeholder="e.g. Zaid Bin Mansoor" maxlength="35" autocomplete="name" spellcheck="false"/>
+          </div>
+          <button id="gb" class="btn bp">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+            Generate Signatures
+          </button>
+        </div>
+        <div class="cbar">
+          <div class="cg"><label>Ink</label>
+            <div class="sws">
+              <button class="sw on" data-c="#000000" style="background:#000"></button>
+              <button class="sw" data-c="#1a237e" style="background:#1a237e"></button>
+              <button class="sw" data-c="#0d47a1" style="background:#0d47a1"></button>
+              <button class="sw" data-c="#1b5e20" style="background:#1b5e20"></button>
+              <button class="sw" data-c="#4a148c" style="background:#4a148c"></button>
+              <button class="sw" data-c="#b71c1c" style="background:#b71c1c"></button>
+              <input type="color" id="cp" value="#000000" title="Custom color"/>
+            </div>
+          </div>
+          <div class="cg"><label>Size <span id="sv">52</span>px</label><input type="range" id="ss" min="30" max="85" value="52" step="1"/></div>
+          <div class="cg"><label>Style</label><select id="ff"><option value="all">All styles</option></select></div>
+          <div class="cg"><label>Search</label><input type="text" id="si" placeholder="loop, bold, doctor…"/></div>
+          <div class="cg"><button id="zb" class="btn bs">⬇ ZIP</button></div>
+          <div class="cg"><button id="cb" class="btn bg2">🗑 Clear</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: DRAW -->
+    <div class="tab-panel" id="panelDraw">
+      <div class="draw-wrap">
+        <!-- Toolbar -->
+        <div class="draw-toolbar">
+          <div class="cg"><label>Pen size</label>
+            <div class="pen-sizes">
+              <button class="pen-sz" data-sz="2" title="Fine"><span style="width:3px;height:3px;"></span></button>
+              <button class="pen-sz on" data-sz="4" title="Medium"><span style="width:5px;height:5px;"></span></button>
+              <button class="pen-sz" data-sz="7" title="Bold"><span style="width:8px;height:8px;"></span></button>
+              <button class="pen-sz" data-sz="11" title="Thick"><span style="width:12px;height:12px;"></span></button>
+            </div>
+          </div>
+          <div class="cg"><label>Ink</label>
+            <div class="draw-sws">
+              <button class="draw-sw on" data-dc="#000000" style="background:#000"></button>
+              <button class="draw-sw" data-dc="#1a237e" style="background:#1a237e"></button>
+              <button class="draw-sw" data-dc="#0d47a1" style="background:#0d47a1"></button>
+              <button class="draw-sw" data-dc="#1b5e20" style="background:#1b5e20"></button>
+              <button class="draw-sw" data-dc="#4a148c" style="background:#4a148c"></button>
+              <button class="draw-sw" data-dc="#b71c1c" style="background:#b71c1c"></button>
+              <input type="color" id="dcp" value="#000000" title="Custom ink"/>
+            </div>
+          </div>
+          <div class="cg smoothness-wrap">
+            <label>Smooth <span id="smoothVal">5</span></label>
+            <input type="range" id="smoothSlider" min="0" max="10" value="5" step="1"/>
+          </div>
+          <div class="cg" style="margin-left:auto;">
+            <button class="btn bg2" id="undoBtn" title="Undo last stroke">↩ Undo</button>
+            <button class="btn bg2" id="clearDrawBtn">🗑 Clear</button>
+          </div>
+        </div>
+
+        <!-- Canvas -->
+        <div class="canvas-container" id="canvasContainer">
+          <canvas id="drawCanvas"></canvas>
+          <div class="draw-hint" id="drawHint">✍️ Draw your signature here<br><small style="opacity:.6">Mouse or touch supported</small></div>
+        </div>
+
+        <!-- Actions -->
+        <div class="draw-actions">
+          <button class="btn bp" id="saveDrawBtn">💾 Save Signature</button>
+          <button class="btn bs" id="dlPngDrawBtn">⬇ Download PNG</button>
+          <button class="btn bs" id="dlSvgDrawBtn">⬇ Download SVG</button>
+          <button class="btn bs" id="copyDrawBtn">📋 Copy</button>
+          <button class="btn bs" id="dlTransDrawBtn">⬇ Transparent PNG</button>
+        </div>
+
+        <!-- Saved signatures -->
+        <div id="savedDrawsWrap" class="hidden">
+          <div style="font-size:.8rem;font-weight:600;color:var(--mut);margin:16px 0 8px;padding-top:14px;border-top:1px solid var(--brd);">Saved Signatures</div>
+          <div class="saved-draws" id="savedDraws"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div id="stb" class="stb hidden">
+    <span id="tc"></span><span class="dot">·</span>
+    <span id="fc"></span><span class="dot">·</span>
+    <button id="sfb" class="lb">Show favourites</button>
+    <button id="sab" class="lb hidden">Show all</button>
+  </div>
+  <div class="grid" id="grid">
+    <div class="empty" id="emp">
+      <svg viewBox="0 0 80 60" fill="none"><path d="M8 48 Q18 8 34 28 Q50 48 66 14" stroke="var(--acc)" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M18 54 Q42 54 66 54" stroke="var(--acc)" stroke-width="1.8" stroke-linecap="round" fill="none" opacity=".4"/></svg>
+      <p>Type a name and click <strong>Generate Signatures</strong></p>
+    </div>
+  </div>
+  <div id="ov" class="ov hidden"><div class="sp"></div><p>Drawing signatures…</p></div>
+</main>
+<div id="toast" class="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" onload="window.__zip=true" onerror="window.__zip=false"></script>
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// SIGNFORGE — Canvas Handwriting Engine v3
+// Uses Google Fonts cursive + multi-pass canvas layering to
+// produce realistic handwritten signature appearance:
+//   1. Ink bleed layer (soft shadow)
+//   2. Main text with per-char baseline drift
+//   3. Pressure overlay using thin canvas strokes
+//   4. Flourish paths using bezier curves
+//   5. Natural underlines with wobble
+// ═══════════════════════════════════════════════════════════════
+
+// ── Seeded deterministic RNG
+function mkRng(seed){
+  let s=seed>>>0;
+  return ()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};
+}
+
+// ── Parse hex color
+function hexRgb(h){
+  return{r:parseInt(h.slice(1,3),16),g:parseInt(h.slice(3,5),16),b:parseInt(h.slice(5,7),16)};
+}
+
+// ══════════════════════════════════════════════════════════════
+// FONT REGISTRY — 40 Google Fonts cursive families
+// ══════════════════════════════════════════════════════════════
+const FONTS = [
+  {f:'Dancing Script',     w:[400,700], cat:'Elegant Cursive'},
+  {f:'Great Vibes',        w:[400],     cat:'Formal Calligraphy'},
+  {f:'Pinyon Script',      w:[400],     cat:'Formal Calligraphy'},
+  {f:'Allura',             w:[400],     cat:'Elegant Cursive'},
+  {f:'Sacramento',         w:[400],     cat:'Elegant Cursive'},
+  {f:'Italianno',          w:[400],     cat:'Elegant Cursive'},
+  {f:'Monsieur La Doulaise',w:[400],   cat:'Formal Calligraphy'},
+  {f:'Mrs Saint Delafield',w:[400],    cat:'Formal Calligraphy'},
+  {f:'Alex Brush',         w:[400],     cat:'Luxury Script'},
+  {f:'Parisienne',         w:[400],     cat:'Luxury Script'},
+  {f:'Euphoria Script',    w:[400],     cat:'Luxury Script'},
+  {f:'Engagement',         w:[400],     cat:'Luxury Script'},
+  {f:'Herr Von Muellerhoff',w:[400],   cat:'Luxury Script'},
+  {f:'Carattere',          w:[400],     cat:'Elegant Cursive'},
+  {f:'Ruthie',             w:[400],     cat:'Luxury Script'},
+  {f:'Qwitcher Grypen',    w:[400,700], cat:'Modern Script'},
+  {f:'Arizonia',           w:[400],     cat:'Modern Script'},
+  {f:'Clicker Script',     w:[400],     cat:'Modern Script'},
+  {f:'Inspiration',        w:[400],     cat:'Modern Script'},
+  {f:'Courgette',          w:[400],     cat:'Modern Script'},
+  {f:'Pacifico',           w:[400],     cat:'Bold & Casual'},
+  {f:'Satisfy',            w:[400],     cat:'Bold & Casual'},
+  {f:'Yellowtail',         w:[400],     cat:'Bold & Casual'},
+  {f:'Cookie',             w:[400],     cat:'Bold & Casual'},
+  {f:'Lobster',            w:[400],     cat:'Bold & Casual'},
+  {f:'Kaushan Script',     w:[400],     cat:'Bold & Casual'},
+  {f:'Lobster Two',        w:[400,700], cat:'Bold & Casual'},
+  {f:'Caveat',             w:[400,700], cat:'Natural Handwriting'},
+  {f:'Indie Flower',       w:[400],     cat:'Natural Handwriting'},
+  {f:'Patrick Hand',       w:[400],     cat:'Natural Handwriting'},
+  {f:'Shadows Into Light', w:[400],     cat:'Natural Handwriting'},
+  {f:'Permanent Marker',   w:[400],     cat:'Artistic & Grunge'},
+  {f:'Rock Salt',          w:[400],     cat:'Artistic & Grunge'},
+  {f:'Special Elite',      w:[400],     cat:'Artistic & Grunge'},
+  {f:'Covered By Your Grace',w:[400],  cat:'Artistic & Grunge'},
+  {f:'Cinzel',             w:[400,700], cat:'Classic Serif'},
+  {f:'Playfair Display',   w:[400,700], cat:'Classic Serif'},
+  {f:'Cormorant Garamond', w:[400,700], cat:'Classic Serif'},
+  {f:'Abril Fatface',      w:[400],     cat:'Classic Serif'},
+  {f:'Yeseva One',         w:[400],     cat:'Classic Serif'},
+];
+
+// ── Build Google Fonts URL
+function buildFontUrl(){
+  const families=FONTS.map(f=>{
+    const name=f.f.replace(/ /g,'+');
+    const wts=f.w.join(';');
+    return `family=${name}:wght@${wts}`;
+  }).join('&');
+  return `https://fonts.googleapis.com/css2?${families}&display=swap`;
+}
+
+// ── Inject font stylesheet
+(function(){
+  const l=document.createElement('link');
+  l.rel='stylesheet'; l.href=buildFontUrl();
+  document.head.appendChild(l);
+})();
+
+// ══════════════════════════════════════════════════════════════
+// STYLE PRESETS
+// [label, category, slant, wobble, pressure, inkVar, tilt, sizeScale, spacing, underline, flourish, shadowBlur, connectedness]
+// ══════════════════════════════════════════════════════════════
+const STYLES = [
+  ['Classic Cursive',      'Cursive',    0.18, 0.014, 1.05, 0.15, -0.04, 1.00, 0.98, 'long',   'tail',  1.8, 0.9],
+  ['Executive Bold',       'Business',   0.10, 0.007, 1.40, 0.10, -0.03, 1.05, 1.00, 'long',   'none',  1.2, 0.7],
+  ['Flowing Script',       'Cursive',    0.24, 0.018, 0.90, 0.18, -0.05, 1.00, 1.05, 'curved', 'both',  2.0, 1.0],
+  ['Compact Pro',          'Business',   0.08, 0.006, 1.30, 0.09, -0.02, 0.92, 0.96, 'double', 'none',  1.0, 0.6],
+  ['Romantic Sweep',       'Elegant',    0.28, 0.022, 0.85, 0.20, -0.06, 1.02, 1.08, 'curved', 'both',  2.2, 1.0],
+  ['Legal Formal',         'Professional',0.05,0.005, 1.45, 0.08, -0.01, 1.00, 1.00, 'double', 'none',  0.8, 0.5],
+  ['Artistic Loop',        'Artistic',   0.22, 0.026, 0.80, 0.22, -0.07, 1.08, 1.12, 'wave',   'both',  2.5, 1.0],
+  ['Speed Script',         'Cursive',    0.32, 0.030, 0.72, 0.25, -0.08, 0.96, 0.96, 'none',   'tail',  1.5, 1.0],
+  ['Corporate Clean',      'Professional',0.06,0.004, 1.50, 0.07, -0.01, 1.00, 1.00, 'long',   'none',  0.7, 0.4],
+  ['Vintage Pen',          'Classic',    0.12, 0.015, 1.10, 0.16, -0.03, 1.00, 1.04, 'short',  'lead',  1.6, 0.8],
+  ['Bold Signature',       'Business',   0.08, 0.007, 1.60, 0.10, -0.02, 1.12, 1.02, 'long',   'none',  1.3, 0.6],
+  ['Gentle Wave',          'Elegant',    0.18, 0.020, 0.92, 0.18, -0.04, 0.96, 1.08, 'wave',   'lead',  1.9, 0.9],
+  ['Dynamic Slant',        'Cursive',    0.36, 0.028, 0.85, 0.23, -0.06, 1.00, 1.05, 'curved', 'tail',  2.0, 1.0],
+  ['Minimalist Ink',       'Modern',     0.05, 0.003, 1.00, 0.06, 0.00,  0.88, 1.12, 'none',   'none',  0.6, 0.3],
+  ['Royal Script',         'Elegant',    0.16, 0.016, 1.02, 0.16, -0.04, 1.06, 1.10, 'curved', 'both',  2.1, 1.0],
+  ['Ink Splash',           'Artistic',   0.26, 0.036, 0.75, 0.28, -0.08, 1.08, 1.02, 'wave',   'both',  2.8, 1.0],
+  ['Calligraphy Pen',      'Classic',    0.12, 0.014, 1.15, 0.14, -0.03, 1.02, 1.06, 'long',   'lead',  1.5, 0.8],
+  ['Sweeping Arc',         'Elegant',    0.20, 0.020, 0.90, 0.18, -0.05, 1.00, 1.08, 'curved', 'both',  2.0, 1.0],
+  ['Tight Formal',         'Professional',0.04,0.004, 1.45, 0.07, -0.01, 0.92, 0.96, 'double', 'none',  0.7, 0.4],
+  ['Free Spirit',          'Artistic',   0.34, 0.034, 0.72, 0.28, -0.09, 1.04, 1.18, 'wave',   'both',  3.0, 1.0],
+  ['Diplomat',             'Professional',0.09,0.007, 1.32, 0.10, -0.02, 1.00, 1.02, 'double', 'none',  1.0, 0.5],
+  ['Power Stroke',         'Business',   0.12, 0.010, 1.55, 0.12, -0.03, 1.10, 1.04, 'long',   'tail',  1.4, 0.7],
+  ['Whimsical',            'Artistic',   0.22, 0.028, 0.80, 0.24, -0.06, 0.98, 1.14, 'wave',   'both',  2.4, 1.0],
+  ['Doctor Scrawl',        'Medical',    0.40, 0.045, 0.65, 0.32, -0.10, 0.94, 0.90, 'none',   'none',  1.2, 1.0],
+  ['Lawyer Script',        'Legal',      0.10, 0.008, 1.28, 0.11, -0.02, 1.00, 1.00, 'long',   'none',  1.1, 0.6],
+  ['CEO Mark',             'Business',   0.08, 0.006, 1.52, 0.09, -0.02, 1.08, 1.03, 'long',   'tail',  1.2, 0.6],
+  ['Poet Ink',             'Artistic',   0.18, 0.022, 0.88, 0.20, -0.05, 0.98, 1.10, 'wave',   'lead',  2.0, 0.9],
+  ['Sharp Modern',         'Modern',     0.05, 0.004, 1.22, 0.08, 0.00,  0.94, 1.00, 'short',  'none',  0.8, 0.4],
+  ['Grand Flourish',       'Elegant',    0.20, 0.020, 0.90, 0.18, -0.05, 1.08, 1.14, 'curved', 'both',  2.2, 1.0],
+  ['Heritage',             'Classic',    0.14, 0.013, 1.08, 0.15, -0.03, 1.00, 1.06, 'long',   'lead',  1.6, 0.8],
+  ['Ultra Clean',          'Modern',     0.02, 0.002, 1.20, 0.05, 0.00,  0.90, 1.04, 'none',   'none',  0.5, 0.2],
+  ['Baroque',              'Classic',    0.16, 0.018, 1.02, 0.17, -0.04, 1.06, 1.10, 'curved', 'both',  2.0, 0.9],
+  ['Storm Script',         'Cursive',    0.36, 0.040, 0.72, 0.30, -0.09, 1.00, 0.98, 'none',   'both',  1.8, 1.0],
+  ['Prestige Plus',        'Professional',0.10,0.008, 1.40, 0.11, -0.02, 1.04, 1.04, 'double', 'lead',  1.1, 0.6],
+  ['Night Ink',            'Artistic',   0.22, 0.032, 0.82, 0.26, -0.06, 1.00, 1.04, 'wave',   'tail',  2.4, 1.0],
+  ['Graceful',             'Elegant',    0.14, 0.016, 0.94, 0.16, -0.03, 0.96, 1.08, 'curved', 'lead',  1.8, 0.9],
+  ['Quick Sign',           'Cursive',    0.28, 0.026, 0.76, 0.24, -0.07, 0.92, 0.96, 'short',  'tail',  1.4, 1.0],
+  ['Banker Bold',          'Business',   0.06, 0.005, 1.60, 0.08, -0.01, 1.04, 1.00, 'double', 'none',  1.0, 0.5],
+  ['Artist Wild',          'Artistic',   0.42, 0.048, 0.68, 0.35, -0.11, 1.04, 1.08, 'wave',   'both',  3.2, 1.0],
+  ['Looped Elegance',      'Elegant',    0.20, 0.018, 0.94, 0.18, -0.05, 1.06, 1.12, 'curved', 'both',  2.1, 1.0],
+];
+
+// ── Name format variants
+function nameVariants(raw){
+  const p=raw.trim().split(/\s+/).filter(Boolean);
+  if(!p.length)return[];
+  const C=s=>s[0].toUpperCase()+s.slice(1).toLowerCase();
+  const f=C(p[0]),rest=p.slice(1).map(C),l=rest.length?rest[rest.length-1]:'';
+  const fi=f[0],li=l?l[0]:'',inits=p.map(x=>x[0].toUpperCase());
+  const v=[];
+  v.push({t:[f,...rest].join(' '),lb:'Full name'});
+  if(l)v.push({t:`${f} ${li}.`,lb:'First + initial'});
+  if(l)v.push({t:`${fi}. ${l}`,lb:'Initial + last'});
+  v.push({t:f,lb:'First name'});
+  if(l)v.push({t:l,lb:'Last name'});
+  if(inits.length>1)v.push({t:inits.join('.') + '.',lb:'Dotted initials'});
+  if(inits.length>1)v.push({t:inits.join(' '),lb:'Spaced initials'});
+  if(l)v.push({t:`${f} ${li}`,lb:'First + bare initial'});
+  v.push({t:p.map(x=>x.toUpperCase()).join(' '),lb:'Caps'});
+  if(l)v.push({t:`${fi} ${l}`,lb:'Initial + last name'});
+  return v;
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDERER
+// ══════════════════════════════════════════════════════════════
+const CW=500, CH=165, DPR=Math.min(window.devicePixelRatio||1,2);
+
+function mkCanvas(){
+  const c=document.createElement('canvas');
+  c.width=CW*DPR; c.height=CH*DPR;
+  c.style.width=CW+'px'; c.style.height=CH+'px';
+  return c;
+}
+
+// Draw a bezier stroke with pressure variation
+function penStroke(ctx, pts, baseW, rgb, opacity, r){
+  if(pts.length<2)return;
+  const n=pts.length;
+  for(let i=0;i<n-1;i++){
+    const t=i/(n-1);
+    // Natural pressure: peak in middle, thin at ends
+    const pres=Math.pow(Math.sin(t*Math.PI),0.45)*0.65+0.35;
+    // Slight random variation — natural hand
+    const lw=baseW*pres*(0.82+r()*0.36);
+    const op=opacity*(0.78+r()*0.24);
+    const mx=(pts[i].x+pts[i+1].x)/2+(r()-.5)*0.4;
+    const my=(pts[i].y+pts[i+1].y)/2+(r()-.5)*0.4;
+    ctx.beginPath();
+    ctx.moveTo(pts[i].x,pts[i].y);
+    ctx.quadraticCurveTo(mx,my,pts[i+1].x,pts[i+1].y);
+    ctx.strokeStyle=`rgba(${rgb.r},${rgb.g},${rgb.b},${op})`;
+    ctx.lineWidth=lw;
+    ctx.lineCap='round';
+    ctx.lineJoin='round';
+    ctx.stroke();
+  }
+}
+
+// Main signature render function
+function renderSig(canvas, spec){
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.save();
+  ctx.scale(DPR,DPR);
+
+  const r=mkRng(spec.id*73856093^(spec.text.charCodeAt(0)||1)*19349663);
+  const rgb=hexRgb(spec.color);
+  const [,, slant, wobble, pressure, inkVar, tiltAngle, sizeScale, spacing, uline, flourish, shadowBlur]=spec.style;
+
+  const fontSize=spec.size*sizeScale;
+  const baseStroke=fontSize*0.038*pressure;
+  const cx=CW/2, cy=CH/2;
+  const ty=cy+fontSize*0.3;
+
+  // ── Global tilt
+  ctx.translate(cx,cy);
+  ctx.rotate(tiltAngle+(r()-.5)*0.02);
+  ctx.translate(-cx,-cy);
+
+  // ── Font setup
+  const fontW=spec.fontWeight;
+  ctx.textBaseline='alphabetic';
+  ctx.textAlign='center';
+
+  // ── Layer 1: Ink bleed / soft shadow (makes it look printed on paper)
+  ctx.save();
+  ctx.font=`${fontW} ${fontSize}px '${spec.fontFamily}', cursive`;
+  if(slant!==0) ctx.transform(1,0,-slant,1,ty*slant,0);
+  ctx.globalAlpha=0.04*inkVar;
+  ctx.fillStyle=spec.color;
+  ctx.filter=`blur(${shadowBlur}px)`;
+  // Draw offset for bleed effect
+  for(let bx=-1;bx<=1;bx++){
+    for(let by=0;by<=1;by++){
+      ctx.fillText(spec.text, cx+bx*1.2, ty+by*1.0);
+    }
+  }
+  ctx.filter='none';
+  ctx.restore();
+
+  // ── Measure text width
+  ctx.font=`${fontW} ${fontSize}px '${spec.fontFamily}', cursive`;
+  const measuredW=ctx.measureText(spec.text).width*spacing;
+  const textStartX=cx-measuredW/2;
+  const textEndX=cx+measuredW/2;
+
+  // ── Lead-in flourish
+  if(flourish==='lead'||flourish==='both'){
+    const h=fontSize*0.52;
+    const lpts=[];
+    for(let i=0;i<=20;i++){
+      const t=i/20;
+      lpts.push({
+        x: textStartX-h*(1-t)*0.88+(r()-.5)*wobble*h*0.1,
+        y: ty+fontSize*0.08-Math.sin(t*Math.PI)*h*0.42*(1-t*0.3)+(r()-.5)*wobble*3
+      });
+    }
+    penStroke(ctx,lpts,baseStroke*0.78,rgb,0.80,r);
+  }
+
+  // ── Layer 2: Main text — per-character with baseline drift
+  const chars=[...spec.text];
+  const charW=measuredW/Math.max(chars.length,1);
+  let cx2=textStartX;
+
+  for(let i=0;i<chars.length;i++){
+    const ch=chars[i];
+    const t=i/Math.max(chars.length-1,1);
+    // Micro baseline drift — like natural hand fatigue
+    const drift=(r()-.5)*wobble*fontSize*0.18;
+    // Slight per-char size variation
+    const szV=1+(r()-.5)*wobble*0.5;
+    const fsSub=fontSize*szV;
+    // Per-char rotation — natural hand wobble
+    const charRot=(r()-.5)*wobble*0.18;
+    // Ink density varies
+    const opV=0.84+r()*inkVar*1.4;
+
+    ctx.save();
+    ctx.font=`${fontW} ${fsSub}px '${spec.fontFamily}', cursive`;
+    const cw2=ctx.measureText(ch).width;
+
+    // Apply slant + wobble transform
+    const charCx=cx2+cw2/2;
+    ctx.translate(charCx,ty+drift);
+    ctx.rotate(charRot);
+    if(slant!==0){
+      ctx.transform(1,0,-slant,1,0,0);
+    }
+    ctx.translate(-charCx,-(ty+drift));
+
+    ctx.globalAlpha=opV;
+    ctx.fillStyle=spec.color;
+    ctx.fillText(ch, charCx, ty+drift);
+    ctx.restore();
+
+    cx2+=cw2*spacing;
+  }
+
+  // ── Layer 3: Pressure ridge overlay — subtle darkening at stroke centers
+  const nPts=Math.max(chars.length*3,18);
+  const ridgePts=[];
+  let rx=textStartX;
+  for(let i=0;i<=nPts;i++){
+    const t=i/nPts;
+    ridgePts.push({
+      x: textStartX+measuredW*t+(r()-.5)*wobble*fontSize*0.04,
+      y: ty-fontSize*0.08+(r()-.5)*wobble*fontSize*0.08
+    });
+  }
+  // Apply slant to pressure ridge
+  ctx.save();
+  if(slant!==0){ctx.transform(1,0,-slant,1,ty*slant,0);}
+  penStroke(ctx,ridgePts,baseStroke*0.28,rgb,0.05*pressure,r);
+  ctx.restore();
+
+  // ── Tail flourish
+  if(flourish==='tail'||flourish==='both'){
+    const h=fontSize*0.55;
+    const tpts=[];
+    for(let i=0;i<=24;i++){
+      const t=i/24;
+      const ease=t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+      tpts.push({
+        x: textEndX+h*ease*1.35+(r()-.5)*wobble*3,
+        y: ty+Math.sin(t*Math.PI*1.3)*h*0.12*(1-t*0.5)+(r()-.5)*wobble*2
+      });
+    }
+    ctx.save();
+    if(slant!==0){ctx.transform(1,0,-slant,1,ty*slant,0);}
+    penStroke(ctx,tpts,baseStroke*0.82,rgb,0.78,r);
+    ctx.restore();
+  }
+
+  // ── Underline
+  if(uline!=='none'){
+    const uy=ty+fontSize*0.26;
+    drawUnderline(ctx,textStartX,textEndX,measuredW,uy,uline,rgb,baseStroke,r,slant,ty);
+  }
+
+  ctx.restore();
+}
+
+function drawUnderline(ctx,x1,x2,w,y,type,rgb,bw,r,slant,ty){
+  ctx.save();
+  if(slant!==0)ctx.transform(1,0,-slant,1,ty*slant,0);
+
+  function mkPts(sx,ex,yFn,n){
+    const pts=[];
+    for(let i=0;i<=n;i++){const t=i/n;pts.push({x:sx+(ex-sx)*t,y:yFn(t)+(r()-.5)*1.4});}
+    return pts;
+  }
+
+  if(type==='short'){
+    const cx=(x1+x2)/2;
+    penStroke(ctx,mkPts(cx-w*.3,cx+w*.3,()=>y+5,16),bw*.88,rgb,.78,r);
+  } else if(type==='long'){
+    penStroke(ctx,mkPts(x1-w*.1,x2+w*.1,()=>y+5,24),bw*.95,rgb,.80,r);
+  } else if(type==='double'){
+    penStroke(ctx,mkPts(x1,x2,()=>y+4,20),bw*.80,rgb,.78,r);
+    penStroke(ctx,mkPts(x1+w*.04,x2-w*.04,()=>y+8,18),bw*.70,rgb,.68,r);
+  } else if(type==='curved'){
+    const pts=mkPts(x1-w*.1,x2+w*.1,t=>y+4+Math.sin(t*Math.PI)*12,30);
+    penStroke(ctx,pts,bw*.92,rgb,.80,r);
+  } else if(type==='wave'){
+    const pts=mkPts(x1,x2,t=>y+7+Math.sin(t*Math.PI*2.8)*5.5,52);
+    penStroke(ctx,pts,bw*.80,rgb,.76,r);
+  }
+  ctx.restore();
+}
+
+// ── Export to PNG (white background)
+function toPNG(spec){
+  const c=mkCanvas();
+  const ctx=c.getContext('2d');
+  ctx.save();ctx.scale(DPR,DPR);ctx.fillStyle='#fff';ctx.fillRect(0,0,CW,CH);ctx.restore();
+  renderSig(c,spec);
+  return c.toDataURL('image/png');
+}
+
+// ══════════════════════════════════════════════════════════════
+// APP STATE & UI
+// ══════════════════════════════════════════════════════════════
+const ST={specs:[],cvs:new Map(),favs:new Set(),filter:'',favsOnly:false,color:'#000000',size:52,styleCat:'all'};
+const $=id=>document.getElementById(id);
+const dom={
+  html:document.documentElement,ni:$('ni'),gb:$('gb'),cp:$('cp'),ss:$('ss'),sv:$('sv'),
+  ff:$('ff'),si:$('si'),zb:$('zb'),cb:$('cb'),tb:$('tb'),
+  stb:$('stb'),tc:$('tc'),fc:$('fc'),sfb:$('sfb'),sab:$('sab'),
+  grid:$('grid'),emp:$('emp'),ov:$('ov'),toast:$('toast')
+};
+
+let tT;
+function toast(m,d=2400){clearTimeout(tT);dom.toast.textContent=m;dom.toast.classList.add('on');tT=setTimeout(()=>dom.toast.classList.remove('on'),d);}
+
+function initTheme(){const s=localStorage.getItem('sf-t');const dk=matchMedia('(prefers-color-scheme:dark)').matches;dom.html.setAttribute('data-theme',s||(dk?'dark':'light'));}
+function toggleTheme(){const n=dom.html.getAttribute('data-theme')==='dark'?'light':'dark';dom.html.setAttribute('data-theme',n);localStorage.setItem('sf-t',n);}
+
+function populateStyles(){
+  const cats=[...new Set(STYLES.map(s=>s[1]))].sort();
+  cats.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;dom.ff.appendChild(o);});
+}
+
+// Build all specs from name × style × font combos
+function buildSpecs(raw){
+  const names=nameVariants(raw);
+  const styles=ST.styleCat==='all'?STYLES:STYLES.filter(s=>s[1]===ST.styleCat);
+  if(!names.length||!styles.length)return[];
+  const specs=[];let id=0;
+  names.forEach((nv,ni)=>{
+    styles.forEach((st,si)=>{
+      // Pick font — rotate through fonts per combo
+      const font=FONTS[(ni*styles.length+si)%FONTS.length];
+      const fontWeight=font.w.includes(700)&&(st[4]>1.2)?700:400;
+      specs.push({
+        id:++id,
+        text:nv.t,
+        nameLabel:nv.lb,
+        styleName:st[0],
+        styleCategory:st[1],
+        style:st,
+        fontFamily:font.f,
+        fontCat:font.cat,
+        fontWeight,
+        color:ST.color,
+        size:ST.size,
+        op:0.92
+      });
+    });
+  });
+  return specs;
+}
+
+async function generate(){
+  const raw=dom.ni.value.trim();
+  if(!raw){toast('Please enter a name ✍️');dom.ni.focus();return;}
+  dom.ov.classList.remove('hidden');
+  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+  try{
+    // Wait for fonts — max 3 seconds
+    if(document.fonts&&document.fonts.ready){
+      await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,3000))]);
+    }
+    const specs=buildSpecs(raw);
+    if(!specs.length){toast('No signatures generated');return;}
+    ST.specs=specs;ST.cvs.clear();ST.favsOnly=false;
+    renderGrid(specs);
+    updateStats();
+    dom.stb.classList.remove('hidden');
+    dom.sab.classList.add('hidden');dom.sfb.classList.remove('hidden');
+  }catch(e){console.error(e);toast('Error: '+e.message);}
+  finally{dom.ov.classList.add('hidden');}
+}
+
+function renderGrid(specs){
+  dom.grid.querySelectorAll('.sc').forEach(e=>e.remove());
+  if(!specs.length){dom.emp.classList.remove('hidden');return;}
+  dom.emp.classList.add('hidden');
+  const frag=document.createDocumentFragment();
+  specs.forEach((spec,idx)=>{
+    const canvas=mkCanvas();
+    setTimeout(()=>renderSig(canvas,spec),idx*3);
+    ST.cvs.set(spec.id,canvas);
+    frag.appendChild(buildCard(spec,canvas));
+  });
+  dom.grid.appendChild(frag);
+}
+
+function buildCard(spec,canvas){
+  const card=document.createElement('div');
+  card.className='sc'+(ST.favs.has(spec.id)?' fav':'');
+  const wrap=document.createElement('div');wrap.className='cw';wrap.appendChild(canvas);
+  const footer=document.createElement('div');footer.className='cf';
+  const meta=document.createElement('div');meta.className='sm';
+  const lbl=document.createElement('div');lbl.className='sl';lbl.textContent=spec.nameLabel;
+  const fn=document.createElement('div');fn.className='sf';fn.textContent=spec.styleName+' · '+spec.fontFamily;
+  meta.append(lbl,fn);
+  const acts=document.createElement('div');acts.className='ca';
+  const fb=mkAct('⭐','Favourite');
+  if(ST.favs.has(spec.id))fb.classList.add('fon');
+  fb.onclick=()=>toggleFav(spec.id,card,fb);
+  acts.append(fb,mkAct('PNG','Download PNG',()=>dlPNG(spec)),mkAct('SVG','Download SVG',()=>dlSVG(spec)),mkAct('📋','Copy',()=>copyImg(spec)));
+  footer.append(meta,acts);
+  card.append(wrap,footer);
+  return card;
+}
+
+function mkAct(t,title,fn){
+  const b=document.createElement('button');b.className='ab';b.title=title;b.textContent=t;
+  if(fn)b.onclick=e=>{e.stopPropagation();fn();};
+  return b;
+}
+
+function updateStats(){
+  const v=ST.favsOnly?ST.favs.size:ST.specs.length;
+  dom.tc.textContent=v+' signature'+(v!==1?'s':'');
+  dom.fc.textContent=ST.favs.size+' favourite'+(ST.favs.size!==1?'s':'');
+}
+
+function toggleFav(id,card,btn){
+  if(ST.favs.has(id)){ST.favs.delete(id);card.classList.remove('fav');btn.classList.remove('fon');toast('Removed');}
+  else{ST.favs.add(id);card.classList.add('fav');btn.classList.add('fon');toast('Favourited ⭐');}
+  updateStats();
+}
+
+function filtered(){
+  const q=ST.filter.toLowerCase().trim();
+  if(!q)return ST.specs;
+  return ST.specs.filter(s=>(s.nameLabel+' '+s.styleName+' '+s.styleCategory+' '+s.fontFamily+' '+s.fontCat+' '+s.text).toLowerCase().includes(q));
+}
+
+function setColor(hex){
+  ST.color=hex;dom.cp.value=hex;
+  document.querySelectorAll('.sw').forEach(s=>s.classList.toggle('on',s.dataset.c===hex));
+  if(ST.specs.length)generate();
+}
+
+function dlPNG(spec){
+  const c=mkCanvas();const ctx=c.getContext('2d');
+  ctx.save();ctx.scale(DPR,DPR);ctx.fillStyle='#fff';ctx.fillRect(0,0,CW,CH);ctx.restore();
+  renderSig(c,spec);
+  const a=document.createElement('a');
+  a.href=c.toDataURL('image/png');
+  a.download=`SignForge_${spec.text.replace(/\s+/g,'_')}_${spec.styleName.replace(/\s+/g,'_')}.png`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  toast('PNG downloaded ⬇');
+}
+
+function dlSVG(spec){
+  const c=mkCanvas();const ctx=c.getContext('2d');
+  ctx.save();ctx.scale(DPR,DPR);ctx.fillStyle='#fff';ctx.fillRect(0,0,CW,CH);ctx.restore();
+  renderSig(c,spec);
+  const png=c.toDataURL('image/png');
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${CW}" height="${CH}"><rect width="${CW}" height="${CH}" fill="white"/><image href="${png}" width="${CW}" height="${CH}"/></svg>`;
+  const a=document.createElement('a');
+  a.href='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  a.download=`SignForge_${spec.text.replace(/\s+/g,'_')}_${spec.styleName.replace(/\s+/g,'_')}.svg`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  toast('SVG downloaded ⬇');
+}
+
+async function copyImg(spec){
+  const c=ST.cvs.get(spec.id);
+  if(!c){dlPNG(spec);return;}
+  try{
+    c.toBlob(async blob=>{
+      try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);toast('Copied! 📋');}
+      catch{dlPNG(spec);toast('Saved as PNG');}
+    });
+  }catch{dlPNG(spec);}
+}
+
+async function bulkDL(){
+  if(!ST.specs.length){toast('Generate signatures first');return;}
+  if(!window.__zip||typeof JSZip==='undefined'){
+    toast('Downloading first 8 individually…');
+    for(let i=0;i<Math.min(8,ST.specs.length);i++){await new Promise(r=>setTimeout(r,250));dlPNG(ST.specs[i]);}
+    return;
+  }
+  toast('Building ZIP…',8000);dom.ov.classList.remove('hidden');
+  try{
+    const zip=new JSZip();
+    const nm=(dom.ni.value.trim()||'sigs').replace(/\s+/g,'_');
+    const folder=zip.folder(nm);
+    for(const s of ST.specs){
+      const c=mkCanvas();const ctx=c.getContext('2d');
+      ctx.save();ctx.scale(DPR,DPR);ctx.fillStyle='#fff';ctx.fillRect(0,0,CW,CH);ctx.restore();
+      renderSig(c,s);
+      const b64=c.toDataURL('image/png').split(',')[1];
+      folder.file(`${s.id}_${s.nameLabel.replace(/\s+/g,'_')}_${s.styleName.replace(/\s+/g,'_')}.png`,b64,{base64:true});
+    }
+    const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=nm+'_SignForge.zip';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast(`${ST.specs.length} signatures downloaded! ⬇`);
+  }catch(e){toast('ZIP error: '+e.message);}
+  finally{dom.ov.classList.add('hidden');}
+}
+
+function clearAll(){
+  ST.specs=[];ST.cvs.clear();ST.favs.clear();ST.filter='';ST.favsOnly=false;
+  dom.ni.value='';dom.si.value='';
+  dom.grid.querySelectorAll('.sc').forEach(c=>c.remove());
+  dom.emp.classList.remove('hidden');dom.stb.classList.add('hidden');
+  dom.ni.focus();
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// DRAW PAD ENGINE
+// Full canvas drawing with:
+// - Mouse + Touch support
+// - Pressure-simulated stroke width (speed-based)
+// - Catmull-Rom spline smoothing
+// - Undo / Clear
+// - Save gallery
+// - PNG / SVG / Transparent PNG download
+// ══════════════════════════════════════════════════════════════
+
+const D = {
+  canvas: null, ctx: null,
+  drawing: false,
+  color: '#000000',
+  penSize: 4,
+  smoothness: 5,
+  strokes: [],      // all saved strokes for undo
+  curStroke: [],    // current stroke points [{x,y,p}]
+  savedList: [],    // saved signatures {dataURL, id}
+  lastX: 0, lastY: 0, lastT: 0,
+  savedCount: 0,
+};
+
+function initDraw(){
+  D.canvas = document.getElementById('drawCanvas');
+  D.ctx = D.canvas.getContext('2d');
+  resizeDrawCanvas();
+
+  // Mouse events
+  D.canvas.addEventListener('mousedown',  drawStart);
+  D.canvas.addEventListener('mousemove',  drawMove);
+  D.canvas.addEventListener('mouseup',    drawEnd);
+  D.canvas.addEventListener('mouseleave', drawEnd);
+
+  // Touch events
+  D.canvas.addEventListener('touchstart', e=>{ e.preventDefault(); drawStart(e.touches[0]); }, {passive:false});
+  D.canvas.addEventListener('touchmove',  e=>{ e.preventDefault(); drawMove(e.touches[0]);  }, {passive:false});
+  D.canvas.addEventListener('touchend',   e=>{ e.preventDefault(); drawEnd();                }, {passive:false});
+
+  // Pen size buttons
+  document.querySelectorAll('.pen-sz').forEach(b=>{
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('.pen-sz').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      D.penSize = parseInt(b.dataset.sz);
+    });
+  });
+
+  // Draw color swatches
+  document.querySelectorAll('.draw-sw').forEach(b=>{
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('.draw-sw').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      D.color = b.dataset.dc;
+      document.getElementById('dcp').value = D.color;
+    });
+  });
+
+  document.getElementById('dcp').addEventListener('input', e=>{
+    D.color = e.target.value;
+    document.querySelectorAll('.draw-sw').forEach(x=>x.classList.remove('on'));
+  });
+
+  // Smooth slider
+  const sSlider = document.getElementById('smoothSlider');
+  sSlider.addEventListener('input', e=>{
+    D.smoothness = parseInt(e.target.value);
+    document.getElementById('smoothVal').textContent = D.smoothness;
+  });
+
+  // Buttons
+  document.getElementById('undoBtn').addEventListener('click', undoStroke);
+  document.getElementById('clearDrawBtn').addEventListener('click', clearDraw);
+  document.getElementById('saveDrawBtn').addEventListener('click', saveDrawnSig);
+  document.getElementById('dlPngDrawBtn').addEventListener('click', ()=>dlDraw('png', true));
+  document.getElementById('dlSvgDrawBtn').addEventListener('click', ()=>dlDraw('svg', true));
+  document.getElementById('copyDrawBtn').addEventListener('click', copyDraw);
+  document.getElementById('dlTransDrawBtn').addEventListener('click', ()=>dlDraw('png', false));
+
+  window.addEventListener('resize', resizeDrawCanvas);
+}
+
+function resizeDrawCanvas(){
+  if(!D.canvas) return;
+  const container = document.getElementById('canvasContainer');
+  const W = container.clientWidth || 860;
+  const H = 200;
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  D.canvas.width  = W * dpr;
+  D.canvas.height = H * dpr;
+  D.canvas.style.width  = W + 'px';
+  D.canvas.style.height = H + 'px';
+  D.ctx.scale(dpr, dpr);
+  redrawAll();
+}
+
+function getPos(e){
+  const rect = D.canvas.getBoundingClientRect();
+  const dpr  = Math.min(window.devicePixelRatio||1,2);
+  return {
+    x: (e.clientX - rect.left),
+    y: (e.clientY - rect.top)
+  };
+}
+
+function drawStart(e){
+  D.drawing = true;
+  const pos = getPos(e);
+  D.lastX = pos.x; D.lastY = pos.y; D.lastT = Date.now();
+  D.curStroke = [{x:pos.x, y:pos.y, p:1.0}];
+  // Hide hint
+  document.getElementById('drawHint').style.opacity = '0';
+}
+
+function drawMove(e){
+  if(!D.drawing) return;
+  const pos = getPos(e);
+  const now = Date.now();
+  const dt  = Math.max(now - D.lastT, 1);
+  const dx  = pos.x - D.lastX;
+  const dy  = pos.y - D.lastY;
+  const speed = Math.sqrt(dx*dx + dy*dy) / dt;
+
+  // Pressure simulation: faster = thinner (like a real pen)
+  const pressure = Math.max(0.3, Math.min(1.0, 1.0 - speed * 3.5));
+
+  D.curStroke.push({x:pos.x, y:pos.y, p:pressure});
+  D.lastX = pos.x; D.lastY = pos.y; D.lastT = now;
+
+  // Live draw the current stroke
+  redrawAll();
+  drawStrokeOnCtx(D.ctx, D.curStroke, D.color, D.penSize, D.smoothness);
+}
+
+function drawEnd(){
+  if(!D.drawing) return;
+  D.drawing = false;
+  if(D.curStroke.length > 1){
+    D.strokes.push({pts:[...D.curStroke], color:D.color, size:D.penSize, smooth:D.smoothness});
+  }
+  D.curStroke = [];
+  redrawAll();
+}
+
+function redrawAll(){
+  const W = D.canvas.width / Math.min(window.devicePixelRatio||1,2);
+  const H = D.canvas.height / Math.min(window.devicePixelRatio||1,2);
+  D.ctx.clearRect(0,0,W,H);
+  for(const stroke of D.strokes){
+    drawStrokeOnCtx(D.ctx, stroke.pts, stroke.color, stroke.size, stroke.smooth);
+  }
+}
+
+// Catmull-Rom spline smoothing
+function smoothPts(pts, tension){
+  if(pts.length < 3 || tension === 0) return pts;
+  const out = [pts[0]];
+  for(let i=1; i<pts.length-1; i++){
+    const p0=pts[Math.max(0,i-1)], p1=pts[i], p2=pts[Math.min(pts.length-1,i+1)];
+    const steps = Math.max(2, Math.round(tension));
+    for(let t=0; t<=steps; t++){
+      const s = t/steps;
+      const s2=s*s, s3=s2*s;
+      const x = 0.5*((2*p1.x)+(-p0.x+p2.x)*s+(2*p0.x-5*p1.x+4*p2.x-pts[Math.min(pts.length-1,i+2)]?.x??p2.x)*s2+(-p0.x+3*p1.x-3*p2.x+(pts[Math.min(pts.length-1,i+2)]?.x??p2.x))*s3);
+      const y = 0.5*((2*p1.y)+(-p0.y+p2.y)*s+(2*p0.y-5*p1.y+4*p2.y-pts[Math.min(pts.length-1,i+2)]?.y??p2.y)*s2+(-p0.y+3*p1.y-3*p2.y+(pts[Math.min(pts.length-1,i+2)]?.y??p2.y))*s3);
+      const p = p0.p*(1-s)+p1.p*s;
+      out.push({x,y,p});
+    }
+  }
+  out.push(pts[pts.length-1]);
+  return out;
+}
+
+function drawStrokeOnCtx(ctx, rawPts, color, penSize, smoothness){
+  if(rawPts.length < 2) return;
+  const pts = smoothPts(rawPts, smoothness);
+
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  for(let i=1; i<pts.length; i++){
+    const p0=pts[i-1], p1=pts[i];
+    const avgP = (p0.p + p1.p) / 2;
+    const lw = penSize * avgP * (0.6 + avgP * 0.8);
+
+    ctx.beginPath();
+    ctx.moveTo(p0.x, p0.y);
+    ctx.lineTo(p1.x, p1.y);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = Math.max(0.5, lw);
+    ctx.stroke();
+  }
+}
+
+function undoStroke(){
+  if(!D.strokes.length){ toast('Nothing to undo'); return; }
+  D.strokes.pop();
+  redrawAll();
+  if(!D.strokes.length){
+    document.getElementById('drawHint').style.opacity='1';
+  }
+  toast('Stroke undone ↩');
+}
+
+function clearDraw(){
+  D.strokes=[];
+  D.curStroke=[];
+  redrawAll();
+  document.getElementById('drawHint').style.opacity='1';
+  toast('Canvas cleared');
+}
+
+function getDrawPNG(withBg){
+  const W = D.canvas.width / Math.min(window.devicePixelRatio||1,2);
+  const H = D.canvas.height / Math.min(window.devicePixelRatio||1,2);
+  const dpr = Math.min(window.devicePixelRatio||1,2);
+  const tmp = document.createElement('canvas');
+  tmp.width = W*dpr; tmp.height = H*dpr;
+  const tc = tmp.getContext('2d');
+  tc.scale(dpr,dpr);
+  if(withBg){ tc.fillStyle='#ffffff'; tc.fillRect(0,0,W,H); }
+  for(const stroke of D.strokes){
+    drawStrokeOnCtx(tc, stroke.pts, stroke.color, stroke.size, stroke.smooth);
+  }
+  return tmp.toDataURL('image/png');
+}
+
+function dlDraw(fmt, withBg){
+  if(!D.strokes.length){ toast('Draw something first ✍️'); return; }
+  const png = getDrawPNG(withBg);
+  const suffix = withBg ? '' : '_transparent';
+  if(fmt==='png'){
+    const a=document.createElement('a');
+    a.href=png; a.download=`MySignature${suffix}.png`;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    toast('PNG downloaded ⬇');
+  } else {
+    const W = D.canvas.width/Math.min(window.devicePixelRatio||1,2);
+    const H = D.canvas.height/Math.min(window.devicePixelRatio||1,2);
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">${withBg?`<rect width="${W}" height="${H}" fill="white"/>`:''}
+<image href="${png}" width="${W}" height="${H}"/></svg>`;
+    const a=document.createElement('a');
+    a.href='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+    a.download='MySignature.svg';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    toast('SVG downloaded ⬇');
+  }
+}
+
+async function copyDraw(){
+  if(!D.strokes.length){ toast('Draw something first ✍️'); return; }
+  const png = getDrawPNG(true);
+  try{
+    const res = await fetch(png);
+    const blob = await res.blob();
+    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+    toast('Copied to clipboard! 📋');
+  } catch{
+    // fallback
+    const a=document.createElement('a');a.href=getDrawPNG(true);a.download='MySignature.png';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    toast('Saved as PNG instead');
+  }
+}
+
+function saveDrawnSig(){
+  if(!D.strokes.length){ toast('Draw something first ✍️'); return; }
+  const png = getDrawPNG(true);
+  D.savedCount++;
+  D.savedList.push({id:D.savedCount, dataURL:png});
+  renderSavedDraws();
+  toast('Signature saved! 💾');
+}
+
+function renderSavedDraws(){
+  const wrap = document.getElementById('savedDrawsWrap');
+  const container = document.getElementById('savedDraws');
+  if(!D.savedList.length){ wrap.classList.add('hidden'); return; }
+  wrap.classList.remove('hidden');
+  container.innerHTML = '';
+  D.savedList.slice().reverse().forEach(item=>{
+    const card = document.createElement('div');
+    card.className='saved-draw-card';
+    const img=document.createElement('img');
+    img.src=item.dataURL; img.alt='Saved signature';
+    const footer=document.createElement('div');
+    footer.className='saved-draw-footer';
+    const lbl=document.createElement('span');
+    lbl.className='saved-draw-label';
+    lbl.textContent='Signature #'+item.id;
+    const acts=document.createElement('div');
+    acts.className='saved-draw-actions';
+    // Download btn
+    const dlb=document.createElement('button');
+    dlb.className='ab'; dlb.title='Download PNG'; dlb.textContent='⬇';
+    dlb.onclick=()=>{ const a=document.createElement('a');a.href=item.dataURL;a.download=`MySignature_${item.id}.png`;document.body.appendChild(a);a.click();document.body.removeChild(a);toast('Downloaded ⬇'); };
+    // Delete btn
+    const deb=document.createElement('button');
+    deb.className='ab'; deb.title='Delete'; deb.textContent='🗑';
+    deb.onclick=()=>{ D.savedList=D.savedList.filter(x=>x.id!==item.id); renderSavedDraws(); toast('Deleted'); };
+    acts.append(dlb,deb);
+    footer.append(lbl,acts);
+    card.append(img,footer);
+    container.appendChild(card);
+  });
+}
+
+// ── Tab switcher
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+  document.getElementById('panel'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+  if(tab==='draw'){
+    setTimeout(()=>{ resizeDrawCanvas(); },50);
+  }
+}
+window.switchTab = switchTab;
+
+
+function init(){
+  initTheme();populateStyles();
+  dom.gb.addEventListener('click',generate);
+  dom.ni.addEventListener('keydown',e=>{if(e.key==='Enter')generate();});
+  dom.tb.addEventListener('click',toggleTheme);
+  document.querySelectorAll('.sw').forEach(s=>s.addEventListener('click',()=>setColor(s.dataset.c)));
+  dom.cp.addEventListener('input',e=>{ST.color=e.target.value;document.querySelectorAll('.sw').forEach(s=>s.classList.remove('on'));if(ST.specs.length)generate();});
+  dom.ss.addEventListener('input',e=>{ST.size=parseInt(e.target.value);dom.sv.textContent=ST.size;if(ST.specs.length)generate();});
+  dom.ff.addEventListener('change',e=>{ST.styleCat=e.target.value;if(ST.specs.length)generate();});
+  let sd;dom.si.addEventListener('input',()=>{clearTimeout(sd);sd=setTimeout(()=>{ST.filter=dom.si.value;const f=filtered();renderGrid(f);dom.tc.textContent=f.length+' signatures';},250);});
+  dom.sfb.addEventListener('click',()=>{ST.favsOnly=true;renderGrid(ST.specs.filter(s=>ST.favs.has(s.id)));updateStats();dom.sfb.classList.add('hidden');dom.sab.classList.remove('hidden');});
+  dom.sab.addEventListener('click',()=>{ST.favsOnly=false;renderGrid(filtered());updateStats();dom.sab.classList.add('hidden');dom.sfb.classList.remove('hidden');});
+  dom.zb.addEventListener('click',bulkDL);
+  dom.cb.addEventListener('click',clearAll);
+  const sz=localStorage.getItem('sf-sz');if(sz){ST.size=parseInt(sz);dom.ss.value=sz;dom.sv.textContent=sz;}
+  dom.ss.addEventListener('change',()=>localStorage.setItem('sf-sz',ST.size));
+  initDraw();
+  dom.ni.focus();
+  console.log('[SignForge v3] Ready | Fonts:',FONTS.length,'| Styles:',STYLES.length,'| Max sigs:',FONTS.length*STYLES.length*10);
+}
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init();
+</script>
+</body>
+</html>
